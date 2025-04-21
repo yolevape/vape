@@ -61,6 +61,26 @@
       cursor: pointer;
       transition: 0.2s;
     }
+    
+    .txid-box {
+    background: #222;
+    border: 1px solid #666;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 12px;
+    text-align: center;
+    color: #eee;
+    box-shadow: 0 0 10px rgba(255,255,255,0.1);
+    }
+    .txid-box button {
+    margin-top: 10px;
+    padding: 8px 16px;
+    background: #444;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    }
 
     .category:hover {
       background-color: #333;
@@ -212,6 +232,83 @@
       color: #66ffcc;
       margin-top: 20px;
     }
+        .txid-box {
+    background: linear-gradient(135deg, #1e1e1e, #292929);
+    border: 1px solid #444;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 12px;
+    text-align: center;
+    color: #e0ffe0;
+    font-size: 16px;
+    box-shadow: 0 0 15px rgba(102, 255, 204, 0.15);
+    position: relative;
+    }
+
+        .txid-box {
+    background: #333;
+    border: 1px solid #666;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 12px;
+    text-align: center;
+    color: #f0f0f0;
+    box-shadow: 0 0 15px rgba(102, 255, 204, 0.15);
+    font-size: 16px;
+    }
+
+    .txid-box strong {
+    font-size: 20px;
+    color: #fff;
+    user-select: all;
+    }
+
+    .copy-txid-btn {
+    margin-top: 12px;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #4caf50, #2e7d32);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: 0.3s ease;
+    box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3);
+    }
+
+    .copy-txid-btn:hover {
+    background: linear-gradient(135deg, #66bb6a, #388e3c);
+    box-shadow: 0 0 12px rgba(102, 255, 204, 0.6);
+    }
+        .remove-item-btn {
+    background: transparent;
+    color: #ff6666;
+    border: none;
+    margin-left: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: 0.2s;
+    }
+
+    .remove-item-btn:hover {
+    color: #ff4444;
+    }
+    @keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+  100% { transform: translateX(0); }
+}
+
+.shake {
+  animation: shake 0.4s;
+  box-shadow: 0 0 12px 2px red !important;
+  border: 1px solid red !important;
+}
+
+
   </style>
 </head>
 <body>
@@ -264,52 +361,205 @@
         ✅ 구매 요청이 정상적으로 완료되었습니다
       </div>
     </form>
+    <div id="confirmBox"></div>
+
   </div>
 
   <script>
+function removeFromCart(index) {
+  cart.splice(index, 1);          // 해당 제품 삭제
+  updateCartStatus();             // 상단 장바구니 상태 갱신
+  showCart();                     // 장바구니 다시 렌더링
+}
+
     const products = [
-      { name: "Vape X200", price: 89000, category: "폐호흡", img: "https://i.ibb.co/PZR2YTrW/SS.png" },
-      { name: "Vape X200", price: 89000, category: "폐호흡", img: "https://i.ibb.co/PZR2YTrW/SS.png" },
-      { name: "Vape X200", price: 89000, category: "폐호흡", img: "https://i.ibb.co/PZR2YTrW/SS.png" },
-      { name: "Vape X200", price: 89000, category: "폐호흡", img: "https://i.ibb.co/PZR2YTrW/SS.png" },
-      { name: "Vape X200", price: 89000, category: "폐호흡", img: "https://i.ibb.co/PZR2YTrW/SS.png" },
-      { name: "Vape X200", price: 89000, category: "폐호흡", img: "https://i.ibb.co/PZR2YTrW/SS.png" },
-      { name: "Vape X200", price: 89000, category: "폐호흡", img: "https://i.ibb.co/PZR2YTrW/SS.png" },
-      { name: "Premium Liquid - 입호흡", price: 22000, category: "입호흡 액상" },
-      { name: "일회용 베이프 1000puffs", price: 15000, category: "일회용" },
-      { name: "Z300 폐호흡 킷", price: 98000, category: "폐호흡" },
-      { name: "입호흡 액상 - 사과맛", price: 19000, category: "입호흡 액상" },
-      { name: "입호흡 기기 LUX", price: 52000, category: "입호흡" },
+      { name: "긱베이프 T200 풀킷 폐호흡 기기", price: 86000, category: "폐호흡", img: "https://i.ibb.co/PZR2YTrW/SS.png",color: "실버 네이버블루 예저블루 블래키쉬그린 클라켓레드" },
+      { name: "긱베이프 Z200 풀킷 폐호흡 기기", price: 90000, category: "폐호흡", img: "https://i.ibb.co/PZR2YTrW/SS.png",color: "골든블루 그린 다크그레이 레드 레인보우 블랙 블루 실버 티타늄그레이 퍼플" },
+      { name: "부푸 아르거스XT 풀킷 폐호흡 기기", price: 83000, category: "폐호흡", img: "https://i.ibb.co/PZR2YTrW/SS.png",color: "실버 그레이 그래파이트 라임그린" },
+      { name: "베이포레소 젠 SE 풀킷 폐호흡 기기", price: 78000, category: "폐호흡", img: "https://i.ibb.co/PZR2YTrW/SS.png",color: "다크블랙 플레티넘골드 아크틱실버 스톰블루 핫핑크 그라디언트퍼플 아이스블루" },
+      { name: "닷모드 닷박스 100W 모드 폐호흡 기기", price: 75000, category: "폐호흡", img: "https://i.ibb.co/PZR2YTrW/SS.png",color: "그레이 로얄블루 오렌지 레드 브라운 블랙" },
+      { name: "로스트베이프 테레마 퀘스트200W 풀킷 폐호흡 전자담배", price: 70000, category: "폐호흡", img: "https://i.ibb.co/PZR2YTrW/SS.png",color: "블랙클리어 건메탈클리어 SS클리어 에메랄드그린 미스틱퍼플 브랙카본피버 건메탈카본피버 SS카본파버 매트블루카본피버 매트레드카본피버 에메랄드그린카본피버 미스틱퍼블카본피버 블랙레더 건메탈레더 SS레더" },
+      { name: "긱베이프 이지스 레전드 3 L300 폐호흡 모드기기", price: 77000, category: "폐호흡", img: "https://i.ibb.co/PZR2YTrW/SS.png",color: "골든블루 그린 다크그레이 레드 레인보우 블랙 블루 실버 티타늄그레이" },
+      { name: "로스트베이프 켄타우루스 N100 풀킷 폐호흡 기기", price: 76000, category: "폐호흡", img: "https://i.ibb.co/PZR2YTrW/SS.png",color: "그레이락 블루썬더 핑크웨이브 블루웨이브" },
+      { name: "부푸 드래그 5 모드 폐호흡 기기", price: 75000, category: "폐호흡", img: "https://i.ibb.co/PZR2YTrW/SS.png",color: "그라디언트브라운 그라디언트블루 그린 블랙 사쿠라핑크 선셋오렌지 실버" },
+      { name: "베이포레소 아머 G 킷 입/폐호흡 기기", price: 73000, category: "폐호흡", img: "https://i.ibb.co/PZR2YTrW/SS.png",color: "블랙 실버 핑크 블루" },
+      { name: "후카 에어 킷 폐호흡 기기", price: 73000, category: "폐호흡", img: "https://i.ibb.co/PZR2YTrW/SS.png",color: "룸빅" },
+      { name: "부푸 드래그4 모드 폐호흡 기기", price: 73000, category: "폐호흡", img: "https://i.ibb.co/PZR2YTrW/SS.png",color: "보라 블랙 베이지" },
+      { name: "부푸 아르거스MT 모드 내장형 폐호흡 기기", price: 73000, category: "폐호흡", img: "https://i.ibb.co/PZR2YTrW/SS.png",color: "보라 블랙 베이지" },
+      { name: "긱베이프 이지스 레전드2 모드 폐호흡 기기", price: 71000, category: "폐호흡", img: "https://i.ibb.co/PZR2YTrW/SS.png",color: "보라 블랙 베이지" },
+      { name: "긱베이프 이지스 레전드2 클래식 모드 폐호흡 기기", price: 71000, category: "폐호흡", img: "https://i.ibb.co/PZR2YTrW/SS.png",color: "보라 블랙 베이지" },
+      { name: "로스트베이프 테레마 퀘스트200W 모드 폐호흡 전자담배", price: 71000, category: "폐호흡", img: "https://i.ibb.co/PZR2YTrW/SS.png",color: "보라 블랙 베이지" },
+      { name: "로스트베이프 켄타우루스 N200 모드 폐호흡 기기", price: 68000, category: "폐호흡", img: "https://i.ibb.co/PZR2YTrW/SS.png",color: "보라 블랙 베이지" },
+      { name: "베이포레소 젠 맥스 모드 폐호흡 기기", price: 68000, category: "폐호흡", img: "https://i.ibb.co/PZR2YTrW/SS.png",color: "보라 블랙 베이지" },
+      { name: "베이포레소 럭스XR 맥스 입호흡 폐호흡 기기", price: 67000, category: "폐호흡", img: "https://i.ibb.co/PZR2YTrW/SS.png",color: "보라 블랙 베이지" },
+      { name: "긱베이프 디지 맥스 입호흡 폐호흡 전자담배", price: 63000, category: "폐호흡", img: "https://i.ibb.co/PZR2YTrW/SS.png",color: "보라 블랙 베이지" },
+      { name: "아스파이어 클라우드 플라스크 X 폐호흡 기기", price: 63000, category: "폐호흡", img: "https://i.ibb.co/PZR2YTrW/SS.png",color: "보라 블랙 베이지" },
+      { name: "부푸 아르거스 PRO 2 폐호흡 기기", price: 63000, category: "폐호흡", img: "https://i.ibb.co/PZR2YTrW/SS.png",color: "보라 블랙 베이지" },
+      { name: "긱베이프 Z200 모드 폐호흡 기기", price: 63000, category: "폐호흡", img: "https://i.ibb.co/PZR2YTrW/SS.png",color: "보라 블랙 베이지" },
+      { name: "로스트베이프 켄타우로스 M200 모드 폐호흡 기기", price: 61000, category: "폐호흡", img: "https://i.ibb.co/PZR2YTrW/SS.png",color: "보라 블랙 베이지" },
+      { name: "베이프 B60 폐호흡 기기", price: 61000, category: "폐호흡", img: "https://i.ibb.co/PZR2YTrW/SS.png",color: "보라 블랙 베이지" },
+      { name: "부푸 드래그 S2 전자담배 폐호흡 기기", price: 70000, category: "폐호흡", img: "https://i.ibb.co/PZR2YTrW/SS.png",color: "보라 블랙 베이지" },
+      { name: "긱베이프 E100 폐호흡 기기", price: 60000, category: "폐호흡", img: "https://i.ibb.co/PZR2YTrW/SS.png",color: "보라 블랙 베이지" },
+      { name: "부푸 드래그 H80S 폐호흡 기기", price: 60000, category: "폐호흡", img: "https://i.ibb.co/PZR2YTrW/SS.png",color: "보라 블랙 베이지" },
+      { name: "로스트베이프 켄타우루스 N100 모드 폐호흡 기기", price: 58000, category: "폐호흡", img: "https://i.ibb.co/PZR2YTrW/SS.png",color: "보라 블랙 베이지" },
+      { name: "부푸 드래그 X2 전자담배 폐호흡 기기", price: 53000, category: "폐호흡", img: "https://i.ibb.co/PZR2YTrW/SS.png",color: "보라 블랙 베이지" },
+      { name: "긱베이프 디지 프로 입호흡 폐호흡 전자담배", price: 56000, category: "폐호흡", img: "https://i.ibb.co/PZR2YTrW/SS.png",color: "보라 블랙 베이지" },
+      { name: "긱베이프 이지스 부스트 3 폐호흡 기기", price: 56000, category: "폐호흡", img: "https://i.ibb.co/PZR2YTrW/SS.png",color: "보라 블랙 베이지" },
+      { name: "긱베이프 B100 폐호흡 기기", price: 56000, category: "폐호흡", img: "https://i.ibb.co/PZR2YTrW/SS.png",color: "보라 블랙 베이지" },
+      { name: "아스파이어 베놈 에어 입호흡 폐호흡 기기", price: 53000, category: "폐호흡", img: "https://i.ibb.co/PZR2YTrW/SS.png",color: "보라 블랙 베이지" },
+      { name: "부푸 아르거스 E40 입호흡 폐호흡 기기", price: 53000, category: "폐호흡", img: "https://i.ibb.co/PZR2YTrW/SS.png",color: "보라 블랙 베이지" },
+      { name: "린코 젤리박스 미니 80W 풀킷 폐호흡 전자담배", price: 52000, category: "폐호흡", img: "https://i.ibb.co/PZR2YTrW/SS.png",color: "보라 블랙 베이지" },
+      { name: "베이포레소 럭스XR 입호흡 폐호흡 기기", price: 51000, category: "폐호흡", img: "https://i.ibb.co/PZR2YTrW/SS.png",color: "보라 블랙 베이지" },
+      { namme: "부푸 아르거스 E40 입호흡 폐호흡 기기", price: 53000, category: "폐호흡", img: "https://i.ibb.co/PZR2YTrW/SS.png",color: "보라 블랙 베이지" },
+      { name: "긱베이프 H45 클래식 폐호흡 전자담배", price: 50000, category: "폐호흡", img: "https://i.ibb.co/PZR2YTrW/SS.png",color: "보라 블랙 베이지" },
+      { name: "린코 만토 AIO 울트라 입호흡/폐호흡 기기", price: 50000, category: "폐호흡", img: "https://i.ibb.co/PZR2YTrW/SS.png",color: "보라 블랙 베이지" },
+      { name: "긱베이프 H45 폐호흡 기기", price: 48000, category: "폐호흡", img: "https://i.ibb.co/PZR2YTrW/SS.png",color: "보라 블랙 베이지" },
+      { name: "도포 어비스 AIO 킷 올인원 폐호흡 입호흡 전자담배", price: 45000, category: "폐호흡", img: "https://i.ibb.co/PZR2YTrW/SS.png",color: "보라 블랙 베이지" },
+      { name: "긱베이프 이지스 레전드 3 L300 폐호흡 모드기기", price: 77000, category: "폐호흡", img: "https://i.ibb.co/PZR2YTrW/SS.png",color: "보라 블랙 베이지" },
+      { name: "하복se", price: 78000, category: "폐호흡", img: "https://i.ibb.co/PZR2YTrW/SS.png",color: "보라 블랙 베이지" },
+
+      { name: "닷모드 닷 AIO V2 라이트 입호흡 폐호흡 기기", price: 92000, category: "입호흡" },
+      { name: "닷모드 닷 투엑스 전자담배 입호흡 기기", price: 77000, category: "입호흡" },
+      { name: "말론 입호흡 기기", price: 75000, category: "입호흡" },
+      { name: "헬베이프 젤로 맥스 입호흡 전자담배", price: 63000, category: "입호흡" },
+      { name: "발라리안 맥스", price: 68000, category: "입호흡" },
+      { name: "디오베이프 디오 엑스 킷 입호흡 기기", price: 62000, category: "입호흡" },
+      { name: "저스트포그 Q16 프로 플러스 입호흡 기기", price: 62000, category: "입호흡" },
+      { name: "옥스바 브이프라임 입호흡 기기", price: 60000, category: "입호흡" },
+      { name: "벱티오 코스모 네뷸라 입호흡 기기", price: 58000, category: "입호흡" },
+      { name: "긱베이프 소울 2 입호흡 전자담배", price: 58000, category: "입호흡" },
+      { name: "저스트포그 글렌트 x 앰비언트 입호흡 기기", price: 55000, category: "입호흡" },
+      { name: "아스몬 듀얼킷 입호흡 기기", price: 58000, category: "입호흡" },
+      { name: "부푸 브이메이트 E2 입호흡 전자담배", price: 57000, category: "입호흡" },
+      { name: "베이프루션 한야 나노 프로 입호흡 전자담배", price: 53000, category: "입호흡" },
+      { name: "베이포레소 크로스 프로 입호흡 기기", price: 53000, category: "입호흡" },
+      { name: "아스파이어 픽소 입호흡 전자담배", price: 53000, category: "입호흡" },
+      { name: "베이포레소 크로스 4 나노 입호흡 기기", price: 53000, category: "입호흡" },
+      { name: "부푸 브이메이트 맥스 입호흡 기기", price: 54000, category: "입호흡" },
+      { name: "긱베이프 소울 쏠 입호흡 전자담배", price: 53000, category: "입호흡" },
+      { name: "헬베이프 젤로 입호흡 기기", price: 53000, category: "입호흡" },
+      { name: "52000", price: 52000, category: "입호흡" },
+      { name: "벱티오 코스모 킷 입호흡 전자담배", price: 51000, category: "입호흡" },
+      { name: "부푸 아르거스 P2 입호흡 기기", price: 50000, category: "입호흡" },
+      { name: "메두사 크랙 킷 입호흡 기기", price: 50000, category: "입호흡" },
+      { name: "부푸 브이메이트 프로 파워 에디션 입호흡 기기", price: 45000, category: "입호흡" },
+      { name: "부푸 아르거스 G2 입호흡 기기", price: 48000, category: "입호흡" },
+      { name: "부푸 아르거스 G2 미니 입호흡 기기", price: 28000, category: "입호흡" },
+      { name: "긱베이프 이지스 나노 2 입호흡 전자담배 An2", price: 48000, category: "입호흡" },
+      { name: "부푸 브이메이트 프로 입호흡 기기", price: 48000, category: "입호흡" },
+      { name: "닷모드 닷팟S 입호흡 기기", price: 48000, category: "입호흡" },
+      { name: "부푸 아르거스P1 입호흡 기기", price: 48000, category: "입호흡" },
+      { name: "부푸 브이메이트E 입호흡 기기", price: 50000, category: "입호흡" },
+      { name: "긱베이프 위넥스 Q 울트라 입호흡 전자담배", price: 48000, category: "입호흡" },
+      { name: "오마리오 슬릭 S 입호흡 전자담배", price: 43000, category: "입호흡" },
+      { name: "포켓코리아 아머 프로 입호흡 기기", price: 45000, category: "입호흡" },
+      { name: "베이포레소 럭스 X2 입호흡 기기", price: 45000, category: "입호흡" },
+      { name: "베이포레소 크로스 4 입호흡 기기", price: 53000, category: "입호흡" },
+      { name: "베이포레소 크로스 4 미니 입호흡 기기", price: 36000, category: "입호흡" },
+      { name: "젠픽 입호흡 기기", price: 42000, category: "입호흡" },
+      { name: "로스트베이프 오리온 피코 입호흡 기기", price: 41000, category: "입호흡" },
+      { name: "뱀피드 AMG PRO 입호흡 기기", price: 41000, category: "입호흡" },
+      { name: "부푸 아르거스G 입호흡 기기", price: 40500, category: "입호흡" },
+      { name: "아스파이어 플렉서스 블락 입호흡 기기", price: 40000, category: "입호흡" },
+      { name: "베이포레소 크로스 큐브 입호흡 기기", price: 35000, category: "입호흡" },
+      { name: "긱베이프 위넥스 Q 프로 입호흡 전자담배", price: 45000, category: "입호흡" },
+      { name: "긱베이프 디지 Q 입호흡 전자담배", price: 39000, category: "입호흡" },
+      { name: "긱베이프 피크 PEAK 입호흡 전자담배", price: 38000, category: "입호흡" },
+      { name: "옥스바 엑슬림 프로 2 킷 입호흡 기기", price: 37000, category: "입호흡" },
+      { name: "아스파이어 페보 입호흡 전자담배", price: 40000, category: "입호흡" },
+      { name: "베이포레소 크로스 4 미니 입호흡 기기", price: 36000, category: "입호흡" },
+      { name: "[이벤트]아스파이어 AVP AX 입호흡 기기", price: 40000, category: "입호흡" },
+      { name: "네복스 필린 AG 입호흡 기기", price: 34000, category: "입호흡" },
+      { name: "부푸 브이메이트 i2 입호흡 기기", price: 33000, category: "입호흡" },
+      { name: "아스파이어 고텍 나노 입호흡 기기", price: 27000, category: "입호흡" },
+      { name: "긱베이프 선더Q 입호흡 기기", price: 24000, category: "입호흡" },
+      { name: "아스파이어 고텍 S", price: 16000, category: "입호흡" },
+      { name: "엘프바 BC5000 일회용 전자담배 13ml", price: 6000, category: "일회용" },
+      { name: "엘프바 BC10000 일회용 전자담배 15ml", price: 6000, category: "일회용" },
+
+      { name: "얼려먹구싶오 입호흡액상", price: 14000, category: "입호흡 액상" },
+      { name: "얼려먹구싶오 입호흡액상 1+1", price: 20000, category: "입호흡 액상" },
+      { name: "제로쿨 입호흡액상", price: 15000, category: "입호흡 액상" },
+      { name: "포켓츄 입호흡액상", price: 15000, category: "입호흡 액상" },
+      { name: "과일먹구싶오 입호흡액상", price: 18000, category: "입호흡 액상" },
+      { name: "플렉스X 입호흡액상", price: 20000, category: "입호흡 액상" },
+      { name: "갈아먹구싶오 입호흡액상", price: 15000, category: "입호흡 액상" },
+      { name: "MVG 입호흡액상", price: 19000, category: "입호흡 액상" },
+      { name: "잽쥬스 입호흡액상", price: 22000, category: "입호흡 액상" },
+      { name: "마르키사 입호흡액상", price: 24000, category: "입호흡 액상" },
+      { name: "맥스쿨 입호흡액상", price: 15000, category: "입호흡 액상" },
+      { name: "리큐 입호흡액상", price: 20000, category: "입호흡 액상" },
+      { name: "한입만 입호흡액상", price: 15000, category: "입호흡 액상" },
+      { name: "좀비런 입호흡액상", price: 23000, category: "입호흡 액상" },
+      { name: "군침싹 입호흡액상", price: 15000, category: "입호흡 액상" },
+      { name: "마르키사 입호흡액상", price: 20000, category: "입호흡 액상" },
+      { name: "크로닉 입호흡액상", price: 20000, category: "입호흡 액상" },
+      { name: "고드름 입호흡액상", price: 18000, category: "입호흡 액상" },
+      { name: "슈퍼쿨맥스 입호흡액상", price: 24000, category: "입호흡 액상" },
+      { name: "슈퍼쿨 크로닉 입호흡액상", price: 20000, category: "입호흡 액상" },
+      { name: "펠릭스 쿨릭스 입호흡액상", price: 24000, category: "입호흡 액상" },
+      { name: "핵쥬스 디저트 입호흡액상", price: 23000, category: "입호흡 액상" },
+      { name: "마시자 입호흡액상", price: 20000, category: "입호흡 액상" },
+      { name: "세븐코리아 포카리 입호흡액상", price: 16500, category: "입호흡 액상" },
+
+      { name: "MVG 폐호흡액상", price: 23000, category: "폐호흡 액상" },
+      { name: "얼려먹구싶오 액상 1+1", price: 30000, category: "폐호흡 액상" },
+      { name: "얼려먹구싶오 액상", price: 20000, category: "폐호흡 액상" },
+      { name: "포켓츄 폐호흡액상", price: 15000, category: "폐호흡 액상" },
+      { name: "잽쥬스 폐호흡액상", price: 25000, category: "폐호흡 액상" },
+      { name: "크로닉 폐호흡액상", price: 25000, category: "폐호흡 액상" },
+      { name: "한입만 폐호흡액상", price: 18000, category: "폐호흡 액상" },
+      { name: "Aisu Nami 폐호흡액상", price: 25000, category: "폐호흡 액상" },
+      { name: "슈퍼쿨맥스 폐호흡액상", price: 25000, category: "폐호흡 액상" },
+      { name: "크로닉 슈퍼쿨 폐호흡액상", price: 25000, category: "폐호흡 액상" },
+      { name: "핵쥬스 폐호흡액상", price: 24000, category: "폐호흡 액상" },
+      { name: "요거어때 폐호흡액상", price: 24000, category: "폐호흡 액상" },
+      { name: "하이민트 폐호흡액상", price: 25000, category: "폐호흡 액상" },
+      { name: "몬스터즈 폐호흡액상", price: 25000, category: "폐호흡 액상" },
+      { name: "좀비런 폐호흡액상", price: 25000, category: "폐호흡 액상" },
+      { name: "펠릭스랩 폐호흡액상", price: 28000, category: "폐호흡 액상" },
+      { name: "앰비언트 폐호흡액상", price: 25000, category: "폐호흡 액상" },
+      { name: "플렉스X 폐호흡액상", price: 25000, category: "폐호흡 액상" },
+      { name: "리퀴드랩 스프라이트 폐호흡액상", price: 15000, category: "폐호흡 액상" },
+      { name: "세븐코리아 포카리 폐호흡액상", price: 25000, category: "폐호흡 액상" },
+      { name: "고드름 폐호흡액상", price: 15000, category: "폐호흡 액상" }
+
     ];
 
     let cart = [];
 
     function renderProducts(filter = 'all') {
-      const list = document.getElementById("productList");
-      list.innerHTML = '';
-      products.forEach((product, idx) => {
-        if (filter === 'all' || product.category === filter) {
-          const el = document.createElement('div');
-          el.className = 'product-card';
-          el.innerHTML = `
-            <div class="product-img" style="background-image: url('${product.img || ''}')"></div>
-            <div class="product-name">${product.name}</div>
-            <div class="product-price">₩${product.price.toLocaleString()}</div>
-            <button class="add-cart" onclick="addToCart(${idx})">장바구니 추가</button>
-          `;
-          list.appendChild(el);
-        }
-      });
+  const list = document.getElementById("productList");
+  list.innerHTML = '';
+  products.forEach((product, idx) => {
+    if (filter === 'all' || product.category === filter) {
+      const el = document.createElement('div');
+      el.className = 'product-card';
+
+      el.innerHTML = `
+        <div class="product-img" style="background-image: url('${product.img || ''}')"></div>
+        <div class="product-name">${product.name}</div>
+        <div class="product-price">₩${product.price.toLocaleString()}</div>
+        <button class="add-cart" onclick="addToCart(${idx})">장바구니 추가</button>
+      `;
+      list.appendChild(el);
     }
+  });
+}
+
 
     function filterProducts(category) {
       renderProducts(category);
     }
 
     function addToCart(index) {
-      cart.push(products[index]);
-      updateCartStatus();
-    }
+  const selectedProduct = {
+    ...products[index]
+  };
+
+  cart.push(selectedProduct);
+  updateCartStatus();
+}
 
     function updateCartStatus() {
       const total = cart.reduce((sum, item) => sum + item.price, 0);
@@ -317,21 +567,36 @@
     }
 
     function showCart() {
-      document.getElementById("modalOverlay").style.display = 'block';
-      document.getElementById("cartModal").style.display = 'block';
+  document.getElementById("modalOverlay").style.display = 'block';
+  document.getElementById("cartModal").style.display = 'block';
 
-      const cartItems = document.getElementById("cartItems");
-      cartItems.innerHTML = '';
-      cart.forEach(item => {
-        const el = document.createElement('div');
-        el.className = 'cart-item';
-        el.textContent = `${item.name} - ₩${item.price.toLocaleString()}`;
-        cartItems.appendChild(el);
-      });
+  const cartItems = document.getElementById("cartItems");
+  cartItems.innerHTML = '';
+  cart.forEach((item, index) => {
+    const el = document.createElement('div');
+    el.className = 'cart-item';
 
-      document.getElementById("buyForm").style.display = 'none';
-      document.getElementById("confirmation").style.display = 'none';
-    }
+    const text = document.createElement('span');
+    text.textContent = `${item.name} - ${item.color} - ₩${item.price.toLocaleString()}`;
+
+    const btn = document.createElement('button');
+    btn.className = 'remove-item-btn';
+    btn.textContent = '❌';
+    btn.onclick = () => removeFromCart(index);
+
+    el.appendChild(text);
+    el.appendChild(btn);
+
+    cartItems.appendChild(el);
+  });
+
+  document.getElementById("buyForm").style.display = 'none';
+  document.getElementById("confirmation").style.display = 'none';
+
+  const buyButton = document.querySelector(".modal-buttons button:first-child");
+  if (buyButton) buyButton.style.visibility = 'visible';
+}
+
 
     function closeCart() {
       document.getElementById("modalOverlay").style.display = 'none';
@@ -339,15 +604,135 @@
     }
 
     function showBuyForm() {
-      document.getElementById("buyForm").style.display = 'block';
+        document.getElementById("buyForm").style.display = 'block';
+        const buyButton = document.querySelector(".modal-buttons button:first-child");
+        if (buyButton) buyButton.style.visibility = 'hidden'; // display: none → visibility: hidden (자리 유지)
     }
+
+
 
     function submitForm(e) {
       e.preventDefault();
       document.getElementById("confirmation").style.display = 'block';
     }
 
-    renderProducts();
+    function renderProducts(filter = 'all') {
+  const list = document.getElementById("productList");
+  list.innerHTML = '';
+  products.forEach((product, idx) => {
+    if (filter === 'all' || product.category === filter) {
+      const el = document.createElement('div');
+      el.className = 'product-card';
+
+
+        el.innerHTML = `
+          <div class="product-img" style="background-image: url('${product.img || ''}')"></div>
+          <div class="product-name">${product.name}</div>
+          <div class="product-price">₩${product.price.toLocaleString()}</div>
+          <button class="add-cart" onclick="addToCart(${idx})">장바구니 추가</button>
+        `;
+
+      list.appendChild(el);
+    }
+  });
+}
+function submitForm(e) {
+  e.preventDefault();
+  submitOrder(); // TXID 생성 및 웹훅 전송
+  document.getElementById("confirmation").style.display = 'block';
+}
+
+function submitOrder() {
+  if (cart.length === 0) return;
+
+  const txid = Math.floor(100 + Math.random() * 900);
+  const totalPrice = cart.reduce((sum, item) => sum + item.price, 0);
+
+  const name = document.getElementById("name").value.trim();
+  const phone = document.getElementById("phone").value.trim();
+  const store = document.getElementById("store").value.trim();
+
+  if (!name || !phone || !store) {
+    alert("모든 정보를 입력해주세요.");
+    return;
+  }
+
+  let summary = '';
+  const productCount = {};
+  cart.forEach(item => {
+    productCount[item.name] = (productCount[item.name] || 0) + 1;
+  });
+
+  for (const name in productCount) {
+    summary += `- ${name} x ${productCount[name]}\n`;
+  }
+
+  // 디스코드 웹훅 전송
+  fetch('https://discord.com/api/webhooks/1363443033508413460/qXZ5T6j50hb361TgyoDfCNUgJ915Uh_o6b4Ik-4KBmNpIIotCV_qura68hosvdYwRzgj', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+content: `💸 결제 정보\n
+  🧾 제품:\n${summary}
+  💳 TXID: ${txid}
+  💰 총금액: ₩${totalPrice.toLocaleString()}
+  👤 이름: ${name}
+  📱 연락처: ${phone}
+  🏪 점포명: ${store}
+  📆 날짜: ${new Date().toLocaleString()}`
+
+    })
+  });
+
+  document.getElementById("confirmBox").innerHTML = `
+  <div class="txid-box">
+    <div style="font-size: 18px; margin-bottom: 10px;">✅ 구매 요청이 정상적으로 완료되었습니다</div>
+    <div style="font-size: 20px; font-weight: bold;">
+      TXID: <span id="txidText">${txid}</span>
+    </div>
+    <div style="margin-top: 10px;">
+      💰 입금할 총금액: <strong>₩${totalPrice.toLocaleString()}<br>
+         1908-8506-2073토스 김성현</strong>
+    </div>
+
+`;
+
+}  
+
+function copyTxid() {
+  const txidElement = document.getElementById("txidText");
+  if (!txidElement) return;
+
+  const txid = txidElement.innerText;
+
+  // 복사용 input 요소 생성
+  const tempInput = document.createElement("input");
+  tempInput.value = txid;
+  document.body.appendChild(tempInput);
+  tempInput.select();
+
+  try {
+    const successful = document.execCommand("copy");
+    if (successful) {
+      const notice = document.getElementById("copyNotice");
+      if (notice) {
+        notice.style.display = "block";
+        setTimeout(() => {
+          notice.style.display = "none";
+        }, 2000);
+      }
+    } else {
+      alert("복사에 실패했습니다. 수동으로 복사해주세요.");
+    }
+  } catch (err) {
+    alert("복사 중 오류가 발생했습니다.");
+  }
+
+  document.body.removeChild(tempInput);
+}
+
+
+
   </script>
 
 </body>
